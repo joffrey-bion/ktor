@@ -11,7 +11,7 @@ import io.swagger.codegen.v3.generators.html.*
 import java.io.*
 
 /**
- * Create a get endpoint at [path] with documentation rendered from openApi file at [filename].
+ * Creates a `get` endpoint at [path] with documentation rendered from the OpenAPI file at [filename].
  *
  * The documentation is generated using [StaticHtml2Codegen] by default. It can be customized using config in [block].
  * See [OpenAPIConfig] for more details.

@@ -10,33 +10,33 @@ import io.swagger.parser.*
 import io.swagger.v3.parser.core.models.*
 
 /**
- * Configuration for openApi endpoint.
+ * Configuration for OpenAPI endpoint.
  */
 public class OpenAPIConfig {
     /**
-     * Parser to use for parsing openAPI.
+     * Specifies a parser used to parse OpenAPI.
      */
     public var parser: OpenAPIParser = OpenAPIParser()
 
     /**
-     * OpenAPI generator options.
+     * Specifies options of the OpenAPI generator.
      */
     public var opts: ClientOptInput = ClientOptInput()
 
     /**
-     * Generator to use for generating OpenAPI.
+     * Specifies a generator used to generate OpenAPI.
      */
     public var generator: Generator = DefaultGenerator()
 
     /**
-     * Code generator for [OpenAPIConfig].
+     * Specifies a code generator for [OpenAPIConfig].
      *
      * See also [StaticHtml2Codegen], [StaticHtmlCodegen] and etc.
      */
     public var codegen: CodegenConfig = StaticHtml2Codegen()
 
     /**
-     * Options for OpenAPI format parser.
+     * Provides access to options of the OpenAPI format parser.
      */
     public var options: ParseOptions = ParseOptions()
 }

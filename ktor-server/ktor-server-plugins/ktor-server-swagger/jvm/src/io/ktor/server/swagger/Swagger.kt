@@ -9,16 +9,23 @@ import kotlinx.html.*
 import java.io.*
 
 /**
- * Create a get endpoint with [SwaggerUI] at [path] rendered from open api file located at [swaggerFile].
+ * Creates a `get` endpoint with [SwaggerUI] at [path] rendered from the OpenAPI file located at [swaggerFile].
  */
 public fun Routing.swaggerUI(path: String, swaggerFile: String, block: SwaggerConfig.() -> Unit = {}) {
     val file = File(swaggerFile)
-    val fileName = file.name
+    swaggerUI(path, file, block)
+}
+
+/**
+ * Creates a `get` endpoint with [SwaggerUI] at [path] rendered from the [apiFile].
+ */
+public fun Routing.swaggerUI(path: String, apiFile: File, block: SwaggerConfig.() -> Unit = {}) {
+    val fileName = apiFile.name
     val config = SwaggerConfig().apply(block)
 
     route(path) {
-        get(swaggerFile) {
-            call.respondFile(file)
+        get(apiFile.name) {
+            call.respondFile(apiFile)
         }
         get {
             val fullPath = call.request.path()

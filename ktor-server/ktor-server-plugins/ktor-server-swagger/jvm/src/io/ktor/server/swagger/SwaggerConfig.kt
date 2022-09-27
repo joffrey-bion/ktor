@@ -5,20 +5,20 @@
 package io.ktor.server.swagger
 
 /**
- * Configuration for Swagger UI endpoint.
+ * A configuration for the Swagger UI endpoint.
  */
 public class SwaggerConfig {
     internal var customStyle: String? = null
 
     /**
-     * Specify Swagger UI version to use.
+     * Specifies a Swagger UI version to use.
      */
     public var version: String = "4.14.0"
 
     /**
-     * Set url for custom css style for swagger-ui.
+     * Specifies a URL for a custom CSS applied to a Swagger UI.
      *
-     * You can try: https://unpkg.com/swagger-ui-themes@3.0.1/themes/3.x/theme-monokai.css
+     * Example: https://unpkg.com/swagger-ui-themes@3.0.1/themes/3.x/theme-monokai.css
      */
     public fun customStyle(path: String?) {
         customStyle = path
