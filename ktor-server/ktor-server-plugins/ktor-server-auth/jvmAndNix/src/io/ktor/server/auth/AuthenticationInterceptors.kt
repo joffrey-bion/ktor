@@ -5,11 +5,14 @@
 package io.ktor.server.auth
 
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.util.*
 import io.ktor.util.logging.*
 import io.ktor.util.pipeline.*
+
+internal val LOGGER = KtorSimpleLogger("io.ktor.server.auth.Authentication")
 
 internal object AuthenticationHook : Hook<suspend (ApplicationCall) -> Unit> {
     internal val AuthenticatePhase: PipelinePhase = PipelinePhase("Authenticate")
@@ -55,88 +58,90 @@ public object AuthenticationChecked : Hook<suspend (ApplicationCall) -> Unit> {
     }
 }
 
-private val logger = KtorSimpleLogger("Authentication")
-
 /**
  * A plugin that authenticates calls. Usually used via the [authenticate] function inside routing.
  */
-public val AuthenticationInterceptors: RouteScopedPlugin<RouteAuthenticationConfig> =
-    createRouteScopedPlugin("AuthenticationInterceptors", ::RouteAuthenticationConfig) {
+public val AuthenticationInterceptors: RouteScopedPlugin<RouteAuthenticationConfig> = createRouteScopedPlugin(
+    "AuthenticationInterceptors",
+    ::RouteAuthenticationConfig
+) {
+    on(AuthenticationHook) { call ->
+        val authConfig = call.application.plugin(Authentication).config
 
-        on(AuthenticationHook) { call ->
-            val authConfig = call.application.plugin(Authentication).config
+        val authenticationContext = AuthenticationContext.from(call)
+        if (authenticationContext.principal != null) return@on
 
-            val authenticationContext = AuthenticationContext.from(call)
-            if (authenticationContext.principal != null) return@on
+        val configurations = pluginConfig.configurations.map { configurationName ->
+            authConfig.providers[configurationName] ?: throw IllegalArgumentException(
+                if (configurationName == null) {
+                    "Default authentication configuration was not found"
+                } else {
+                    "Authentication configuration with the name $configurationName was not found"
+                }
+            )
+        }
+        for (provider in configurations) {
+            if (provider.skipWhen.any { skipCondition -> skipCondition(call) }) continue
 
-            val configurations = pluginConfig.configurations.map { configurationName ->
-                authConfig.providers[configurationName] ?: throw IllegalArgumentException(
-                    if (configurationName == null) {
-                        "Default authentication configuration was not found"
-                    } else {
-                        "Authentication configuration with the name $configurationName was not found"
-                    }
-                )
-            }
-            for (provider in configurations) {
-                if (provider.skipWhen.any { skipCondition -> skipCondition(call) }) continue
+            provider.onAuthenticate(authenticationContext)
 
-                provider.onAuthenticate(authenticationContext)
-
-                if (authenticationContext.principal != null) break
+            if (authenticationContext.principal != null) {
+                LOGGER.debug("Authentication succeeded for ${call.request.uri} with provider $provider")
+                break
             }
         }
+    }
 
-        on(ChallengeHook) { call ->
-            val context = AuthenticationContext.from(call)
+    on(ChallengeHook) { call ->
+        val context = AuthenticationContext.from(call)
 
-            if (context.principal != null) return@on
+        if (context.principal != null) return@on
+        if (context.challenge.completed) {
+            if (!call.isHandled) {
+                call.respond(UnauthorizedResponse())
+            }
+            return@on
+        }
+        if (pluginConfig.optional && context.allFailures.none { it == AuthenticationFailedCause.InvalidCredentials }) {
+            return@on
+        }
+
+        val challenges = context.challenge.challenges
+
+        for (challenge in challenges) {
+            challenge(context.challenge, call)
             if (context.challenge.completed) {
                 if (!call.isHandled) {
+                    LOGGER.debug("Responding unauthorized because call is not handled.")
                     call.respond(UnauthorizedResponse())
                 }
                 return@on
             }
-            if (pluginConfig.optional &&
-                context.allFailures.none { it == AuthenticationFailedCause.InvalidCredentials }
-            ) {
+        }
+
+        for (challenge in context.challenge.errorChallenges) {
+            challenge(context.challenge, call)
+            if (context.challenge.completed) {
+                if (!call.isHandled) {
+                    LOGGER.debug("Responding unauthorized because call is not handled.")
+                    call.respond(UnauthorizedResponse())
+                }
                 return@on
             }
+        }
 
-            val challenges = context.challenge.challenges
-
-            for (challenge in challenges) {
-                challenge(context.challenge, call)
-                if (context.challenge.completed) {
-                    if (!call.isHandled) {
-                        call.respond(UnauthorizedResponse())
-                    }
-                    return@on
+        for (error in context.allErrors) {
+            if (!context.challenge.completed) {
+                LOGGER.debug("Responding unauthorized because of error ${error.message}")
+                if (!call.isHandled) {
+                    call.respond(UnauthorizedResponse())
                 }
-            }
-
-            for (challenge in context.challenge.errorChallenges) {
-                challenge(context.challenge, call)
-                if (context.challenge.completed) {
-                    if (!call.isHandled) {
-                        call.respond(UnauthorizedResponse())
-                    }
-                    return@on
-                }
-            }
-
-            for (error in context.allErrors) {
-                if (!context.challenge.completed) {
-                    logger.trace("Responding unauthorized because of error ${error.message}")
-                    if (!call.isHandled) {
-                        call.respond(UnauthorizedResponse())
-                    }
-                    context.challenge.complete()
-                    return@on
-                }
+                context.challenge.complete()
+                return@on
             }
         }
     }
+}
 
 /**
  * Creates a route that allows you to define authorization scope for application resources.
@@ -154,6 +159,7 @@ public fun Route.authenticate(
     build: Route.() -> Unit
 ): Route {
     require(configurations.isNotEmpty()) { "At least one configuration name or null for default need to be provided" }
+
     val configurationNames = configurations.distinct().toList()
     val authenticatedRoute = createChild(AuthenticationRouteSelector(configurationNames))
     authenticatedRoute.attributes.put(AuthenticateProviderNamesKey, configurationNames)
