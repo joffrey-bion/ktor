@@ -464,7 +464,7 @@ class WebSocketTest {
             handleWebSocket("/") {
                 bodyChannel = writer {
                     started.join()
-                    channel.writeFully(sendBuffer)
+//                    channel.writeFully(sendBuffer)
                 }.channel
             }.let { call ->
                 validateCloseWithBigFrame(call)

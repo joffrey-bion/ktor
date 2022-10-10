@@ -13,12 +13,12 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.*
 import kotlin.native.concurrent.*
 
-private const val MAX_CHUNK_SIZE_LENGTH = 128
+private const val MAX_CHUNK_SIZE_LENGTH = 128L
 private const val CHUNK_BUFFER_POOL_SIZE = 2048
 
 private val ChunkSizeBufferPool: ObjectPool<StringBuilder> =
     object : DefaultPool<StringBuilder>(CHUNK_BUFFER_POOL_SIZE) {
-        override fun produceInstance(): StringBuilder = StringBuilder(MAX_CHUNK_SIZE_LENGTH)
+        override fun produceInstance(): StringBuilder = StringBuilder(MAX_CHUNK_SIZE_LENGTH.toInt())
         override fun clearInstance(instance: StringBuilder) = instance.apply { clear() }
     }
 

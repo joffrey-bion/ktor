@@ -8,7 +8,6 @@ import io.ktor.util.cio.*
 import io.ktor.utils.io.jvm.javaio.*
 import kotlinx.coroutines.*
 import org.junit.*
-import org.junit.Ignore
 import java.io.*
 import kotlin.test.*
 import kotlin.test.Test
@@ -81,27 +80,6 @@ class FileChannelTest {
 
         // Assert (we cannot delete if there is a file handle open on it)
         assertTrue(temp.delete())
-    }
-
-    @Test
-    @Ignore("Does not work on team city CI for some reason")
-    fun `readChannel is open during read`() {
-        // Arrange
-        val magicNumberBiggerThanSomeInternalBuffer = 10000
-        temp.writeBytes(ByteArray(magicNumberBiggerThanSomeInternalBuffer))
-        val readChannel = temp.readChannel()
-
-        runBlocking {
-            // Act - place us in the middle of reading a file
-            readChannel.readByte()
-
-            // Assert (we cannot delete if there is a file handle open on it)
-            assertFalse(temp.delete())
-
-            // And just making sure we can complete it normally.
-            readChannel.readRemaining()
-            assertTrue(temp.delete())
-        }
     }
 
     @Test

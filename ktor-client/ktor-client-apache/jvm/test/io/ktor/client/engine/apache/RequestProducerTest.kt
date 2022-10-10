@@ -221,7 +221,7 @@ private class TestEncoder : ContentEncoder {
     val channel = ByteChannel()
 
     override fun write(src: ByteBuffer): Int = runBlocking {
-        channel.writeAvailable(src)
+//        channel.writeAvailable(src)
         src.limit()
     }
 

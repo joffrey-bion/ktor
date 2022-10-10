@@ -53,7 +53,7 @@ public suspend fun ByteReadChannel.readFloat(): Float = TODO()
  *
  * @return number of bytes were discarded
  */
-public suspend fun ByteReadChannel.discard(max: Long): Long = TODO()
+public suspend fun ByteReadChannel.discard(max: Long = Long.MAX_VALUE): Long = TODO()
 
 /**
  * Reads exact [limit] bytes from [ByteReadChannel].
@@ -75,7 +75,7 @@ public suspend fun ByteReadChannel.readRemaining(limit: Long = Long.MAX_VALUE): 
  * @return `true` if line has been read (possibly empty) or `false` if channel has been closed
  * and no characters were read.
  */
-public suspend fun <A : Appendable> ByteReadChannel.readUTF8LineTo(out: A, limit: Int): Boolean = TODO()
+public suspend fun <A : Appendable> ByteReadChannel.readUTF8LineTo(out: A, limit: Long = Long.MAX_VALUE): Boolean = TODO()
 
 /**
  * Reads a line of UTF-8 characters up to [limit] characters.
@@ -85,7 +85,7 @@ public suspend fun <A : Appendable> ByteReadChannel.readUTF8LineTo(out: A, limit
  * @return a line string with no line endings or `null` of channel has been closed
  * and no characters were read.
  */
-public suspend fun ByteReadChannel.readUTF8Line(limit: Int): String? = TODO()
+public suspend fun ByteReadChannel.readUTF8Line(limit: Long = Long.MAX_VALUE): String? = TODO()
 
 /**
  * Discards all bytes in the channel and suspends until end of stream.

@@ -196,8 +196,8 @@ class ChunkedTest {
 
                 while (true) {
                     bb.clear()
-                    val rc = decoded.readAvailable(bb)
-                    if (rc == -1) break
+//                    val rc = decoded.readAvailable(bb)
+//                    if (rc == -1) break
                     bb.flip()
                     val text = String(bb.array(), 0, bb.remaining())
 

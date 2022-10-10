@@ -7,7 +7,6 @@ package io.ktor.utils.io
 import io.ktor.utils.io.charsets.*
 import io.ktor.utils.io.core.*
 import kotlin.test.*
-import kotlin.test.Test
 
 open class StringsTest : ByteChannelTestBase(true) {
     private val channel: ByteChannel get() = ch
@@ -256,7 +255,7 @@ open class StringsTest : ByteChannelTestBase(true) {
 
             for (expected in lines) {
                 yield()
-                assertEquals(expected, channel.readUTF8Line(expected.length))
+                assertEquals(expected, channel.readUTF8Line(expected.length.toLong()))
             }
 
             assertNull(channel.readUTF8Line())

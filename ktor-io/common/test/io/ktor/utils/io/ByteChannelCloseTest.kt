@@ -7,12 +7,6 @@ package io.ktor.utils.io
 import kotlin.reflect.*
 import kotlin.test.*
 
-class ReadPacketWithoutExceptionByteChannelCloseTest : ByteChannelCloseTest(
-    ExpectedFailureException::class,
-    { close(ExpectedFailureException()) },
-    { readPacket(Int.MAX_VALUE) }
-)
-
 class ReadRemainingWithExceptionByteChannelCloseTest : ByteChannelCloseTest(
     ExpectedFailureException::class,
     { close(ExpectedFailureException()) },

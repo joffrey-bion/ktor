@@ -65,7 +65,7 @@ class ClientSocketTest {
         client { socket ->
             val bb = ByteBuffer.allocate(3)
             val channel = socket.openReadChannel()
-            channel.readFully(bb)
+            TODO()
             assertEquals("123", String(bb.array()))
         }
     }

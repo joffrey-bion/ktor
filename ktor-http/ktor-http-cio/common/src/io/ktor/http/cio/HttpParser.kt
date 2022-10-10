@@ -13,7 +13,7 @@ import io.ktor.utils.io.*
  */
 public class ParserException(message: String) : IllegalStateException(message)
 
-private const val HTTP_LINE_LIMIT = 8192
+private const val HTTP_LINE_LIMIT = 8192L
 private const val HTTP_STATUS_CODE_MIN_RANGE = 100
 private const val HTTP_STATUS_CODE_MAX_RANGE = 999
 private val hostForbiddenSymbols = setOf('/', '?', '#', '@')

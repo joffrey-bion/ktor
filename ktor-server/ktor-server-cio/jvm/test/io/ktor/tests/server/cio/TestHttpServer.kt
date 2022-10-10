@@ -82,8 +82,8 @@ private suspend fun client(
         try {
             while (true) {
                 buffer.clear()
-                val rc = outgoing.readAvailable(buffer)
-                if (rc == -1) break
+//                val rc = outgoing.readAvailable(buffer)
+//                if (rc == -1) break
 
                 buffer.flip()
                 while (buffer.hasRemaining()) {
@@ -107,7 +107,7 @@ private suspend fun client(
                 if (rc == -1) break
 
                 buffer.flip()
-                incoming.writeFully(buffer)
+//                incoming.writeFully(buffer)
             }
         } catch (t: Throwable) {
             incoming.close(t)
