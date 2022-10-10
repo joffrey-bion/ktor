@@ -6,6 +6,10 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 import java.nio.*
 
+public fun ByteChannelSequentialJVM(
+    autoFlush: Boolean = false
+): ByteChannelSequentialJVM = ByteChannelSequentialJVM(ChunkBuffer.Empty, autoFlush)
+
 @Suppress("DEPRECATION", "OverridingDeprecatedMember")
 public class ByteChannelSequentialJVM(
     initial: ChunkBuffer,

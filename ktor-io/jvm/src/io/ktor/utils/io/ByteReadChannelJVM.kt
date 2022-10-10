@@ -250,10 +250,6 @@ public actual interface ByteReadChannel {
 public actual suspend fun ByteReadChannel.joinTo(dst: ByteWriteChannel, closeOnEnd: Boolean) {
     require(dst !== this)
 
-    if (this is ByteBufferChannel && dst is ByteBufferChannel) {
-        return dst.joinFrom(this, closeOnEnd)
-    }
-
     return joinToImplSuspend(dst, closeOnEnd)
 }
 
@@ -278,9 +274,7 @@ public actual suspend fun ByteReadChannel.copyTo(dst: ByteWriteChannel, limit: L
         return 0L
     }
 
-    if (this is ByteBufferChannel && dst is ByteBufferChannel) {
-        return dst.copyDirect(this, limit, null)
-    } else if (this is ByteChannelSequentialBase && dst is ByteChannelSequentialBase) {
+    if (this is ByteChannelSequentialBase && dst is ByteChannelSequentialBase) {
         return copyToSequentialImpl(dst, Long.MAX_VALUE) // more specialized extension function
     }
 
@@ -317,37 +311,3 @@ private suspend fun ByteReadChannel.copyToImpl(dst: ByteWriteChannel, limit: Lon
         buffer.release(ChunkBuffer.Pool)
     }
 }
-
-/**
- * TODO
- * Reads all the bytes from receiver channel and builds a packet that is returned unless the specified [limit] exceeded.
- * It will simply stop reading and return packet of size [limit] in this case
- */
-/*suspend fun ByteReadChannel.readRemaining(limit: Int = Int.MAX_VALUE): ByteReadPacket {
-    val buffer = JavaNioAccess.BufferPool.borrow()
-    val packet = WritePacket()
-
-    try {
-        var copied = 0L
-
-        while (copied < limit) {
-            buffer.clear()
-            if (limit - copied < buffer.limit()) {
-                buffer.limit((limit - copied).toInt())
-            }
-            val size = readAvailable(buffer)
-            if (size == -1) break
-
-            buffer.flip()
-            packet.writeFully(buffer)
-            copied += size
-        }
-
-        return packet.build()
-    } catch (t: Throwable) {
-        packet.release()
-        throw t
-    } finally {
-        JavaNioAccess.BufferPool.recycle(buffer)
-    }
-}*/

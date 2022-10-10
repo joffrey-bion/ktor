@@ -2,7 +2,6 @@ package io.ktor.utils.io.internal
 
 import io.ktor.utils.io.charsets.*
 import java.nio.*
-import kotlin.math.*
 
 internal fun ByteBuffer.decodeASCII(out: CharArray, offset: Int = 0, length: Int = out.size): Int {
     return if (hasArray()) {
