@@ -97,11 +97,13 @@ public class RoutingResolveContext(
         val evaluation = entry.selector.evaluate(this, segmentIndex)
 
         if (evaluation is RouteSelectorEvaluation.Failure) {
+            LOGGER.trace("Skipping $entry because selector didn't match")
             trace?.skip(
                 entry,
                 segmentIndex,
                 RoutingResolveResult.Failure(entry, "Selector didn't match", evaluation.failureStatusCode)
             )
+
             if (segmentIndex == segments.size) {
                 failedEvaluation = bestFailedEvaluation(failedEvaluation, evaluation, trait)
             }
@@ -113,6 +115,7 @@ public class RoutingResolveContext(
         if (evaluation.quality != RouteSelectorEvaluation.qualityTransparent &&
             evaluation.quality < matchedQuality
         ) {
+            LOGGER.trace("Skipping $entry because better match was already found")
             trace?.skip(
                 entry,
                 segmentIndex,
@@ -125,6 +128,7 @@ public class RoutingResolveContext(
         val newIndex = segmentIndex + evaluation.segmentIncrement
 
         if (entry.children.isEmpty() && newIndex != segments.size) {
+            LOGGER.trace("Skipping $entry because not all segments matched")
             trace?.skip(
                 entry,
                 newIndex,
@@ -135,6 +139,7 @@ public class RoutingResolveContext(
         }
 
         trace?.begin(entry, newIndex)
+        LOGGER.trace("Subroute $entry is matched")
         trait.add(result)
 
         val hasHandlers = entry.handlers.isNotEmpty()
@@ -170,6 +175,7 @@ public class RoutingResolveContext(
         val finalResolve = resolveResult
 
         if (finalResolve.isEmpty()) {
+            LOGGER.trace("No route matched for ${call.request.uri}")
             return RoutingResolveResult.Failure(
                 routing,
                 "No matched subtrees found",

@@ -4,13 +4,17 @@
 
 package io.ktor.server.routing
 
+import io.ktor.events.*
 import io.ktor.events.EventDefinition
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.util.*
+import io.ktor.util.logging.*
 import io.ktor.util.pipeline.*
+
+internal val LOGGER = KtorSimpleLogger("io.ktor.server.routing.Routing")
 
 @InternalAPI
 public val RoutingFailureStatusCode: AttributeKey<HttpStatusCode> = AttributeKey("RoutingFailureStatusCode")
@@ -47,6 +51,7 @@ public class Routing(
         when (val resolveResult = resolveContext.resolve()) {
             is RoutingResolveResult.Success ->
                 executeResult(context, resolveResult.route, resolveResult.parameters)
+
             is RoutingResolveResult.Failure ->
                 context.call.attributes.put(RoutingFailureStatusCode, resolveResult.errorStatusCode)
         }
