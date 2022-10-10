@@ -35,7 +35,7 @@ internal actual class FileCache actual constructor(
                     }
                     buffer.clear()
 
-                    if (body.readAvailable(buffer) == -1) break
+//                    if (body.readAvailable(buffer) == -1) break
                     buffer.flip()
                 }
             }

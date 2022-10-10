@@ -162,13 +162,13 @@ private fun BufferedSource.toChannel(context: CoroutineContext, requestData: Htt
         use { source ->
             var lastRead = 0
             while (source.isOpen && context.isActive && lastRead >= 0) {
-                channel.write { buffer ->
-                    lastRead = try {
-                        source.read(buffer)
-                    } catch (cause: Throwable) {
-                        throw mapExceptions(cause, requestData)
-                    }
-                }
+//                channel.write { buffer ->
+//                    lastRead = try {
+//                        source.read(buffer)
+//                    } catch (cause: Throwable) {
+//                        throw mapExceptions(cause, requestData)
+//                    }
+//                }
             }
         }
     }.channel

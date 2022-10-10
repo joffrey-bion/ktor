@@ -9,7 +9,7 @@ import io.ktor.utils.io.*
 import io.ktor.utils.io.bits.*
 import io.ktor.utils.io.pool.*
 import kotlinx.coroutines.*
-import java.nio.ByteBuffer
+import java.nio.*
 import java.util.zip.*
 import kotlin.coroutines.*
 
@@ -49,7 +49,7 @@ private suspend fun ByteWriteChannel.deflateWhile(deflater: Deflater, buffer: By
         buffer.clear()
         deflater.deflateTo(buffer)
         buffer.flip()
-        writeFully(buffer)
+        TODO()
     }
 }
 
@@ -74,7 +74,7 @@ private suspend fun ByteReadChannel.deflateTo(
 
         while (!isClosedForRead) {
             input.clear()
-            if (readAvailable(input) <= 0) continue
+            TODO()
             input.flip()
 
             crc.updateKeepPosition(input)

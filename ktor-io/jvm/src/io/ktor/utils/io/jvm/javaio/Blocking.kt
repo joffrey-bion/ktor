@@ -8,7 +8,7 @@ import io.ktor.utils.io.*
 import kotlinx.atomicfu.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.CancellationException
-import org.slf4j.LoggerFactory
+import org.slf4j.*
 import java.io.*
 import kotlin.coroutines.*
 import kotlin.coroutines.intrinsics.*
@@ -32,16 +32,7 @@ private class InputAdapter(parent: Job?, private val channel: ByteReadChannel) :
 
     private val loop = object : BlockingAdapter(parent) {
         override suspend fun loop() {
-            var readCount = 0
-            while (true) {
-                val buffer = rendezvous(readCount) as ByteArray
-                readCount = channel.readAvailable(buffer, offset, length)
-                if (readCount == -1) {
-                    context.complete()
-                    break
-                }
-            }
-            finish(readCount)
+            TODO()
         }
     }
 

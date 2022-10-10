@@ -16,25 +16,5 @@ public typealias ConsumeEachBufferVisitor = (buffer: ByteBuffer, last: Boolean) 
  */
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 public suspend inline fun ByteReadChannel.consumeEachBufferRange(visitor: ConsumeEachBufferVisitor) {
-    var continueFlag: Boolean
-    var lastChunkReported = false
-
-    do {
-        continueFlag = false
-        read { source, start, endExclusive ->
-            val nioBuffer = when {
-                endExclusive > start -> source.slice(start, endExclusive - start).buffer
-                else -> Memory.Empty.buffer
-            }
-
-            lastChunkReported = nioBuffer.remaining() == availableForRead && isClosedForWrite
-            continueFlag = visitor(nioBuffer, lastChunkReported)
-
-            nioBuffer.position()
-        }
-
-        if (lastChunkReported && isClosedForRead) {
-            break
-        }
-    } while (continueFlag)
+    TODO()
 }

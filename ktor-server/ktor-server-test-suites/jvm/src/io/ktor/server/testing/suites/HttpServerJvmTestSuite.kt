@@ -226,8 +226,8 @@ abstract class HttpServerJvmTestSuite<TEngine : ApplicationEngine, TConfiguratio
                                         bb.putLong(i)
                                     }
                                     bb.flip()
-                                    channel.writeFully(bb)
-                                    channel.flush()
+//                                    channel.writeFully(bb)
+//                                    channel.flush()
                                 }
 
                                 channel.close()
@@ -280,8 +280,8 @@ abstract class HttpServerJvmTestSuite<TEngine : ApplicationEngine, TConfiguratio
                                         bb.putLong(i)
                                     }
                                     bb.flip()
-                                    channel.writeFully(bb)
-                                    channel.flush()
+//                                    channel.writeFully(bb)
+//                                    channel.flush()
                                 }
 
                                 channel.close()
@@ -342,9 +342,9 @@ abstract class HttpServerJvmTestSuite<TEngine : ApplicationEngine, TConfiguratio
                             return launch(engineContext) {
                                 try {
                                     val bb = ByteBuffer.allocate(8)
-                                    input.readFully(bb)
-                                    bb.flip()
-                                    output.writeFully(bb)
+//                                    input.readFully(bb)
+//                                    bb.flip()
+//                                    output.writeFully(bb)
                                     output.close()
                                     input.readRemaining().use {
                                         assertEquals(0, it.remaining)

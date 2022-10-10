@@ -15,7 +15,7 @@ import java.nio.*
 public suspend inline fun ByteReadChannel.pass(buffer: ByteBuffer, block: (ByteBuffer) -> Unit) {
     while (!isClosedForRead) {
         buffer.clear()
-        readAvailable(buffer)
+        TODO()
 
         buffer.flip()
         block(buffer)

@@ -14,7 +14,6 @@ import io.netty.buffer.*
 import io.netty.handler.codec.http.*
 import io.netty.handler.codec.http.multipart.*
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder.*
-import java.util.*
 
 internal class NettyMultiPartData(
     private val decoder: HttpPostMultipartRequestDecoder,
@@ -79,17 +78,17 @@ internal class NettyMultiPartData(
 
         val buf = alloc.buffer(channel.availableForRead.coerceIn(256, 4096))
         val bb = buf.nioBuffer(buf.writerIndex(), buf.writableBytes())
-        val rc = channel.readAvailable(bb)
+//        val rc = channel.readAvailable(bb)
 
-        if (rc == -1) {
-            buf.release()
-            decoder.offer(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
-            return false
-        }
-
-        buf.writerIndex(rc)
-        decoder.offer(DefaultHttpContent(buf))
-        buf.release()
+//        if (rc == -1) {
+//            buf.release()
+//            decoder.offer(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
+//            return false
+//        }
+//
+//        buf.writerIndex(rc)
+//        decoder.offer(DefaultHttpContent(buf))
+//        buf.release()
         return true
     }
 

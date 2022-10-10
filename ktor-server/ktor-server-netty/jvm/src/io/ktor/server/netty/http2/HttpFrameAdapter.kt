@@ -16,17 +16,17 @@ internal suspend fun ReceiveChannel<Http2DataFrame>.http2frameLoop(bc: ByteWrite
             val content = message.content() ?: Unpooled.EMPTY_BUFFER
 
             while (content.readableBytes() > 0) {
-                bc.write { bb ->
-                    val size = content.readableBytes()
-                    if (bb.remaining() > size) {
-                        val l = bb.limit()
-                        bb.limit(bb.position() + size)
-                        content.readBytes(bb)
-                        bb.limit(l)
-                    } else {
-                        content.readBytes(bb)
-                    }
-                }
+//                bc.write { bb ->
+//                    val size = content.readableBytes()
+//                    if (bb.remaining() > size) {
+//                        val l = bb.limit()
+//                        bb.limit(bb.position() + size)
+//                        content.readBytes(bb)
+//                        bb.limit(l)
+//                    } else {
+//                        content.readBytes(bb)
+//                    }
+//                }
             }
 
             bc.flush()

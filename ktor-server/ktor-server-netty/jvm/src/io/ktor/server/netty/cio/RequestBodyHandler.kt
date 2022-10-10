@@ -162,7 +162,7 @@ internal class RequestBodyHandler(
         val length = buf.readableBytes()
         if (length > 0) {
             val buffer = buf.internalNioBuffer(buf.readerIndex(), length)
-            dst.writeFully(buffer)
+//            dst.writeFully(buffer)
         }
 
         return max(length, 0)

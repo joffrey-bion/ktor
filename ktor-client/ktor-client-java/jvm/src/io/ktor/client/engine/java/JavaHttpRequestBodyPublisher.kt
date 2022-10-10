@@ -103,17 +103,17 @@ internal class JavaHttpRequestBodyPublisher(
                 do {
                     val buffer = ByteBuffer.allocate(DEFAULT_BUFFER_SIZE)
                     val result = try {
-                        inputChannel.readAvailable(buffer)
+//                        inputChannel.readAvailable(buffer)
                     } catch (cause: Throwable) {
                         signalOnError(cause)
                         closeChannel()
                         return@launch
                     }
 
-                    if (result > 0) {
-                        buffer.flip()
-                        signalOnNext(buffer)
-                    }
+//                    if (result > 0) {
+//                        buffer.flip()
+//                        signalOnNext(buffer)
+//                    }
                     // If we have more permits, queue up another read.
                 } while (checkHaveMorePermits())
 

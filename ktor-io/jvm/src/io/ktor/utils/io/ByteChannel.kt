@@ -9,26 +9,15 @@ import java.nio.*
  */
 @OptIn(DelicateCoroutinesApi::class)
 public fun ByteReadChannel(content: ByteBuffer): ByteReadChannel = GlobalScope.writer {
-    channel.writeFully(content)
+    TODO()
 }.channel
-
-/**
- * Creates buffered channel for asynchronous reading and writing of sequences of bytes.
- */
-public actual fun ByteChannel(autoFlush: Boolean): ByteChannel = ByteChannelSequentialJVM(ChunkBuffer.Empty, autoFlush)
-
-/**
- * Creates channel for reading from the specified byte array.
- */
-public actual fun ByteReadChannel(content: ByteArray, offset: Int, length: Int): ByteReadChannel =
-    ByteReadChannel(ByteBuffer.wrap(content, offset, length))
 
 /**
  * Creates buffered channel for asynchronous reading and writing of sequences of bytes using [close] function to close
  * channel.
  */
 public fun ByteChannel(autoFlush: Boolean = false, exceptionMapper: (Throwable?) -> Throwable?): ByteChannel {
-    val delegate = ByteChannelSequentialJVM(ChunkBuffer.Empty, autoFlush)
+    val delegate = ByteChannelSequentialBase(ChunkBuffer.Empty, autoFlush)
     return object : ByteChannel by delegate {
         override fun close(cause: Throwable?): Boolean {
             val mappedException = exceptionMapper(cause)

@@ -174,11 +174,11 @@ private suspend fun parsePartBodyImpl(
         if (cl > limit) throw IOException("Multipart part content length limit of $limit exceeded (actual size is $cl)")
         input.copyTo(output, cl)
     } else {
-        copyUntilBoundary("part", boundaryPrefixed, input, { output.writeFully(it) }, limit)
+//        copyUntilBoundary("part", boundaryPrefixed, input, { output.writeFully(it) }, limit)
     }
     output.flush()
 
-    return size
+    return TODO()// size
 }
 
 /**
@@ -200,28 +200,7 @@ private suspend fun skipBoundary(boundaryPrefixed: ByteBuffer, input: ByteReadCh
 
     var result = false
     @Suppress("DEPRECATION")
-    input.lookAheadSuspend {
-        awaitAtLeast(1)
-        val buffer = request(0, 1)
-            ?: throw IOException("Failed to pass multipart boundary: unexpected end of stream")
-
-        if (buffer[buffer.position()] != PrefixChar) return@lookAheadSuspend
-        if (buffer.remaining() > 1 && buffer[buffer.position() + 1] == PrefixChar) {
-            result = true
-            consumed(2)
-            return@lookAheadSuspend
-        }
-
-        awaitAtLeast(2)
-        val attempt2buffer = request(1, 1)
-            ?: throw IOException("Failed to pass multipart boundary: unexpected end of stream")
-
-        if (attempt2buffer[attempt2buffer.position()] == PrefixChar) {
-            result = true
-            consumed(2)
-            return@lookAheadSuspend
-        }
-    }
+    TODO()
 
     return result
 }
@@ -339,13 +318,13 @@ public fun CoroutineScope.parseMultipart(
         val size = totalLength - consumedExceptEpilogue
         if (size > Int.MAX_VALUE) throw IOException("Failed to parse multipart: prologue is too long")
         if (size > 0) {
-            send(MultipartEvent.Epilogue(input.readPacket(size.toInt())))
+//            send(MultipartEvent.Epilogue(input.readPacket(size.toInt())))
         }
     } else {
-        val epilogueContent = input.readRemaining()
-        if (epilogueContent.isNotEmpty) {
-            send(MultipartEvent.Epilogue(epilogueContent))
-        }
+//        val epilogueContent = input.readRemaining()
+//        if (epilogueContent.isNotEmpty) {
+//            send(MultipartEvent.Epilogue(epilogueContent))
+//        }
     }
 }
 
@@ -557,9 +536,7 @@ internal suspend fun ByteReadChannel.skipDelimiterOrEof(delimiter: ByteBuffer): 
 
     var found = false
 
-    lookAhead {
-        found = tryEnsureDelimiter(delimiter) == delimiter.remaining()
-    }
+    TODO()
 
     if (found) {
         return true
@@ -572,13 +549,7 @@ internal suspend fun ByteReadChannel.skipDelimiterOrEof(delimiter: ByteBuffer): 
 private suspend fun ByteReadChannel.trySkipDelimiterSuspend(delimiter: ByteBuffer): Boolean {
     var result = true
 
-    lookAheadSuspend {
-        if (!awaitAtLeast(delimiter.remaining()) && !awaitAtLeast(1)) {
-            result = false
-            return@lookAheadSuspend
-        }
-        if (tryEnsureDelimiter(delimiter) != delimiter.remaining()) throw IOException("Broken delimiter occurred")
-    }
+    TODO()
 
     return result
 }

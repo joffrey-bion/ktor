@@ -67,7 +67,7 @@ internal class JavaHttpResponseBodyHandler(
                                 buffer = queue.receive()
                             }
 
-                            responseChannel.writeFully(buffer)
+//                            responseChannel.writeFully(buffer)
                         }
                     }
                 } catch (_: ClosedReceiveChannelException) {

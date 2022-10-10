@@ -310,7 +310,7 @@ abstract class EngineStressSuite<TEngine : ApplicationEngine, TConfiguration : A
                             for (i in 1..1024 * 1024) {
                                 bb.clear()
                                 while (bb.hasRemaining()) {
-                                    channel.writeFully(bb)
+//                                    channel.writeFully(bb)
                                 }
                             }
 

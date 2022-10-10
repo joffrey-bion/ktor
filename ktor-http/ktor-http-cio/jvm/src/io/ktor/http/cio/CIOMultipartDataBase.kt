@@ -71,29 +71,29 @@ public class CIOMultipartDataBase(
         val filename = contentDisposition?.parameter("filename")
 
         if (filename == null) {
-            val packet = part.body.readRemaining(formFieldLimit.toLong()) // TODO fail if limit exceeded
-
-            try {
-                return PartData.FormItem(packet.readText(), { part.release() }, CIOHeaders(headers))
-            } finally {
-                packet.release()
-            }
+//            val packet = part.body.readRemaining(formFieldLimit.toLong()) // TODO fail if limit exceeded
+//
+//            try {
+//                return PartData.FormItem(packet.readText(), { part.release() }, CIOHeaders(headers))
+//            } finally {
+//                packet.release()
+//            }
         }
 
         // file upload
         val buffer = ByteBuffer.allocate(inMemoryFileUploadLimit)
-        part.body.readAvailable(buffer)
+//        part.body.readAvailable(buffer)
 
         val completeRead = if (buffer.remaining() > 0) {
-            part.body.readAvailable(buffer) == -1
+//            part.body.readAvailable(buffer) == -1
         } else false
 
         buffer.flip()
 
-        if (completeRead) {
-            val input = ByteArrayInputStream(buffer.array(), buffer.arrayOffset(), buffer.remaining()).asInput()
-            return PartData.FileItem({ input }, { part.release() }, CIOHeaders(headers))
-        }
+//        if (completeRead) {
+//            val input = ByteArrayInputStream(buffer.array(), buffer.arrayOffset(), buffer.remaining()).asInput()
+//            return PartData.FileItem({ input }, { part.release() }, CIOHeaders(headers))
+//        }
 
         @Suppress("BlockingMethodInNonBlockingContext")
         val tmp = File.createTempFile("file-upload", ".tmp")
@@ -108,7 +108,7 @@ public class CIOMultipartDataBase(
                     }
                     buffer.clear()
 
-                    if (part.body.readAvailable(buffer) == -1) break
+//                    if (part.body.readAvailable(buffer) == -1) break
                     buffer.flip()
                 }
             }

@@ -1,7 +1,6 @@
 package io.ktor.utils.io.jvm.nio
 
 import io.ktor.utils.io.*
-import java.nio.*
 import java.nio.channels.*
 
 /**
@@ -11,37 +10,7 @@ import java.nio.channels.*
  * @return number of bytes were copied
  */
 public suspend fun ReadableByteChannel.copyTo(ch: ByteWriteChannel, limit: Long = Long.MAX_VALUE): Long {
-    require(limit >= 0L) { "Limit shouldn't be negative: $limit" }
-    if (this is SelectableChannel && !isBlocking) {
-        throw IllegalArgumentException("Non-blocking channels are not supported")
-    }
-
-    var copied = 0L
-    var eof = false
-
-    val copy: (ByteBuffer) -> Unit = { bb ->
-        val rem = limit - copied
-        if (rem < bb.remaining()) {
-            val l = bb.limit()
-            bb.limit(bb.position() + rem.toInt())
-            val rc = read(bb)
-            if (rc == -1) eof = true
-            else copied += rc
-            bb.limit(l)
-        } else {
-            val rc = read(bb)
-            if (rc == -1) eof = true
-            else copied += rc
-        }
-    }
-
-    val needFlush = !ch.autoFlush
-    while (copied < limit && !eof) {
-        ch.write(1, copy)
-        if (needFlush) ch.flush()
-    }
-
-    return copied
+    TODO()
 }
 
 /**

@@ -23,11 +23,11 @@ internal class MemoryCache(
         val buffer = ByteArrayPool.borrow()
         val packet = BytePacketBuilder()
         while (!body.isClosedForRead) {
-            val size = body.readAvailable(buffer)
-            if (size == -1) break
-            packet.writeFully(buffer, 0, size)
-
-            channel.writeFully(buffer, 0, size)
+//            val size = body.readAvailable(buffer)
+//            if (size == -1) break
+//            packet.writeFully(buffer, 0, size)
+//
+//            channel.writeFully(buffer, 0, size)
         }
 
         if (body.closedCause != null) {

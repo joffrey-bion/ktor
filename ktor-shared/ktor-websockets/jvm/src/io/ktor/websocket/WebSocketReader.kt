@@ -62,10 +62,11 @@ public class WebSocketReader(
         buffer.clear()
 
         while (state != State.CLOSED) {
-            if (byteChannel.readAvailable(buffer) == -1) {
-                state = State.CLOSED
-                break
-            }
+            TODO()
+//            if (byteChannel.readAvailable(buffer) == -1) {
+//                state = State.CLOSED
+//                break
+//            }
 
             buffer.flip()
             parseLoop(buffer)

@@ -29,48 +29,13 @@ public suspend inline fun ByteWriteChannel.write(
     }
 }
 
-@Suppress("DEPRECATION")
-@Deprecated("Use writeMemory instead.")
-public interface WriterSession {
-    public fun request(min: Int): ChunkBuffer?
-    public fun written(n: Int)
-    public fun flush()
-}
-
-@Suppress("DEPRECATION")
-@Deprecated("Use writeMemory instead.")
-public interface WriterSuspendSession : WriterSession {
-    public suspend fun tryAwait(n: Int)
-}
-
-@Suppress("DEPRECATION")
-internal interface HasWriteSession {
-    public fun beginWriteSession(): WriterSuspendSession?
-    public fun endWriteSession(written: Int)
-}
-
 @PublishedApi
-internal suspend fun ByteWriteChannel.requestWriteBuffer(desiredSpace: Int): Buffer? {
-    val session = writeSessionFor()
-    if (session != null) {
-        val buffer = session.request(desiredSpace)
-        if (buffer != null) {
-            return buffer
-        }
-
-        return writeBufferSuspend(session, desiredSpace)
-    }
-
+internal suspend fun requestWriteBuffer(desiredSpace: Int): Buffer? {
     return writeBufferFallback()
 }
 
 @PublishedApi
 internal suspend fun ByteWriteChannel.completeWriting(buffer: Buffer, written: Int) {
-    if (this is HasWriteSession) {
-        endWriteSession(written)
-        return
-    }
-
     return completeWritingFallback(buffer)
 }
 
@@ -85,19 +50,7 @@ private suspend fun ByteWriteChannel.completeWritingFallback(buffer: Buffer) {
     throw UnsupportedOperationException("Only ChunkBuffer instance is supported.")
 }
 
-@Suppress("DEPRECATION")
-private suspend fun writeBufferSuspend(session: WriterSuspendSession, desiredSpace: Int): Buffer? {
-    session.tryAwait(desiredSpace)
-    return session.request(desiredSpace) ?: session.request(1)
-}
-
 private fun writeBufferFallback(): Buffer = ChunkBuffer.Pool.borrow().also {
     it.resetForWrite()
     it.reserveEndGap(Buffer.ReservedSize)
-}
-
-@Suppress("DEPRECATION", "NOTHING_TO_INLINE")
-private inline fun ByteWriteChannel.writeSessionFor(): WriterSuspendSession? = when {
-    this is HasWriteSession -> beginWriteSession()
-    else -> null
 }

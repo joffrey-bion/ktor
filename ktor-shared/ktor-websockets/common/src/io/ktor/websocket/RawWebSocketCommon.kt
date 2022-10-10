@@ -222,7 +222,7 @@ public suspend fun ByteReadChannel.readFrame(maxFrameSize: Long, lastOpcode: Int
         throw FrameTooBigException(length)
     }
 
-    val data = readPacket(length.toInt())
+    val data = readPacket(length)
     val maskedData = when (maskKey) {
         -1 -> data
         else -> data.mask(maskKey)

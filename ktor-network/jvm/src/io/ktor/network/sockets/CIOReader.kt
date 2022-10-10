@@ -52,7 +52,7 @@ internal fun CoroutineScope.attachForReadingImpl(
                 } else {
                     selectable.interestOp(SelectInterest.READ, false)
                     buffer.flip()
-                    channel.writeFully(buffer)
+                    TODO()
                     buffer.clear()
                 }
             }
@@ -130,9 +130,7 @@ internal fun CoroutineScope.attachForReadingDirectImpl(
 
 private suspend fun ByteWriteChannel.readFrom(nioChannel: ReadableByteChannel): Int {
     var count = 0
-    write { buffer ->
-        count = nioChannel.read(buffer)
-    }
+    TODO()
 
     return count
 }

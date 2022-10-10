@@ -156,12 +156,12 @@ private fun CoroutineScope.skipCancels(
             while (true) {
                 buffer.clear()
 
-                val count = input.readAvailable(buffer)
-                if (count < 0) break
+//                val count = input.readAvailable(buffer)
+//                if (count < 0) break
 
                 buffer.flip()
                 try {
-                    output.writeFully(buffer)
+//                    output.writeFully(buffer)
                 } catch (_: Throwable) {
                     // Output channel has been canceled, discard remaining
                     input.discard()

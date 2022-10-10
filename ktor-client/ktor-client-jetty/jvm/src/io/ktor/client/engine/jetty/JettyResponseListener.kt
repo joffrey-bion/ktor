@@ -6,7 +6,6 @@ package io.ktor.client.engine.jetty
 
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.ktor.http.HttpMethod
 import io.ktor.utils.io.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -97,7 +96,7 @@ internal class JettyResponseListener(
             headersBuilder.append(field.name, field.value)
         }
 
-        if (frame.isEndStream || request.method == HttpMethod.Head) {
+        if (frame.isEndStream || request.method == io.ktor.http.HttpMethod.Head) {
             backendChannel.close()
         }
 
@@ -119,7 +118,7 @@ internal class JettyResponseListener(
         while (true) {
             val (buffer, callback) = backendChannel.receiveCatching().getOrNull() ?: break
             try {
-                if (buffer.remaining() > 0) channel.writeFully(buffer)
+//                if (buffer.remaining() > 0) channel.writeFully(buffer)
                 callback.succeeded()
             } catch (cause: ClosedWriteChannelException) {
                 callback.failed(cause)

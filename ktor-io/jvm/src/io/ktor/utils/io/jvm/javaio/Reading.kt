@@ -47,24 +47,7 @@ public fun InputStream.toByteReadChannel(
     context: CoroutineContext = Dispatchers.IO,
     pool: ObjectPool<ByteBuffer>
 ): ByteReadChannel = GlobalScope.writer(context, autoFlush = true) {
-    val buffer = pool.borrow()
-    try {
-        while (true) {
-            buffer.clear()
-            val readCount = read(buffer.array(), buffer.arrayOffset() + buffer.position(), buffer.remaining())
-            if (readCount < 0) break
-            if (readCount == 0) continue
-
-            buffer.position(buffer.position() + readCount)
-            buffer.flip()
-            channel.writeFully(buffer)
-        }
-    } catch (cause: Throwable) {
-        channel.close(cause)
-    } finally {
-        pool.recycle(buffer)
-        close()
-    }
+    TODO()
 }.channel
 
 /**

@@ -65,7 +65,7 @@ private fun CoroutineScope.inflate(
     val checksum = CRC32()
 
     if (gzip) {
-        val header = source.readPacket(GZIP_HEADER_SIZE)
+        val header: ByteReadPacket = TODO("source.readPacket(GZIP_HEADER_SIZE)")
         val magic = header.readShortLittleEndian()
         val format = header.readByte()
         val flags = header.readByte().toInt()
@@ -100,7 +100,7 @@ private fun CoroutineScope.inflate(
     try {
         var totalSize = 0
         while (!source.isClosedForRead) {
-            if (source.readAvailable(readBuffer) <= 0) continue
+//            if (source.readAvailable(readBuffer) <= 0) continue
             readBuffer.flip()
 
             inflater.setInput(readBuffer.array(), readBuffer.position(), readBuffer.remaining())
@@ -156,6 +156,6 @@ private suspend fun Inflater.inflateTo(channel: ByteWriteChannel, buffer: ByteBu
 
     checksum.updateKeepPosition(buffer)
 
-    channel.writeFully(buffer)
+//    channel.writeFully(buffer)
     return inflated
 }

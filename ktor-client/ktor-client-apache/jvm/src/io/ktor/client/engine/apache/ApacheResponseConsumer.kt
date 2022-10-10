@@ -48,9 +48,10 @@ internal class ApacheResponseConsumer(
         var result: Int
         do {
             result = 0
-            channel.writeAvailable {
-                result = decoder.read(it)
-            }
+            TODO()
+//            channel.writeAvailable {
+//                result = decoder.read(it)
+//            }
         } while (result > 0)
 
         if (result < 0 || decoder.isCompleted) {
@@ -63,7 +64,7 @@ internal class ApacheResponseConsumer(
             launch(Dispatchers.Unconfined) {
                 check(!waiting.getAndSet(true))
                 try {
-                    channel.awaitFreeSpace()
+//                    channel.awaitFreeSpace()
                 } finally {
                     check(waiting.getAndSet(false))
                     interestController.resumeInputIfPossible()

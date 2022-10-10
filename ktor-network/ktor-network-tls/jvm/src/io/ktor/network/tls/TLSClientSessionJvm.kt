@@ -73,8 +73,9 @@ private class TLSSocket(
         try {
             while (true) {
                 buffer.clear()
-                val rc = pipe.readAvailable(buffer)
-                if (rc == -1) break
+                TODO()
+//                val rc = pipe.readAvailable(buffer)
+//                if (rc == -1) break
 
                 buffer.flip()
                 output.send(TLSRecord(TLSRecordType.ApplicationData, packet = buildPacket { writeFully(buffer) }))

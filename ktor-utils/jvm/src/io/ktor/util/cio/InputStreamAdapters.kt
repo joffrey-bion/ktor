@@ -31,7 +31,7 @@ public fun InputStream.toByteReadChannel(
 
             buffer.position(buffer.position() + readCount)
             buffer.flip()
-            channel.writeFully(buffer)
+            TODO()
         }
     } catch (cause: Throwable) {
         channel.close(cause)

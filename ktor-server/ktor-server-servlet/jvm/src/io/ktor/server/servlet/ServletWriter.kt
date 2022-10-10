@@ -10,7 +10,7 @@ import io.ktor.utils.io.pool.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 import java.io.*
-import java.util.concurrent.TimeoutException
+import java.util.concurrent.*
 import javax.servlet.*
 
 internal fun CoroutineScope.servletWriter(output: ServletOutputStream): ReaderJob {
@@ -74,22 +74,23 @@ private class ServletWriter(val output: ServletOutputStream) : WriteListener {
         }
 
         var copied = 0L
-        while (true) {
-            val rc = channel.readAvailable(buffer)
-            if (rc == -1) break
-
-            copied += rc
-            if (copied > MAX_COPY_SIZE) {
-                copied = 0
-                yield()
-            }
-
-            awaitReady()
-            output.write(buffer, 0, rc)
-            awaitReady()
-
-            if (channel.availableForRead == 0) output.flush()
-        }
+        TODO()
+//        while (true) {
+//            val rc = channel.readAvailable(buffer)
+//            if (rc == -1) break
+//
+//            copied += rc
+//            if (copied > MAX_COPY_SIZE) {
+//                copied = 0
+//                yield()
+//            }
+//
+//            awaitReady()
+//            output.write(buffer, 0, rc)
+//            awaitReady()
+//
+//            if (channel.availableForRead == 0) output.flush()
+//        }
     }
 
     private suspend fun awaitReady() {

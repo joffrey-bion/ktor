@@ -177,7 +177,7 @@ class RequestProducerTest {
 
             val result = async {
                 val result = ByteArray(10000)
-                encoder.channel.readFully(result)
+//                encoder.channel.readFully(result)
                 result
             }
 

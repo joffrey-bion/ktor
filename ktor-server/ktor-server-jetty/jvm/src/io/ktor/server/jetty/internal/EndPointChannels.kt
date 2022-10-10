@@ -48,7 +48,7 @@ internal class EndPointReader(
                         fillInterested()
                     }
 
-                    channel.writeFully(buffer)
+//                    channel.writeFully(buffer)
                 }
             } catch (cause: ClosedChannelException) {
                 channel.close()
@@ -111,7 +111,7 @@ internal fun CoroutineScope.endPointWriter(
 
         while (!source.isClosedForRead) {
             buffer.clear()
-            if (source.readAvailable(buffer) == -1) break
+//            if (source.readAvailable(buffer) == -1) break
 
             buffer.flip()
             endPoint.write(buffer)

@@ -129,10 +129,10 @@ public suspend fun encodeChunked(
 public suspend fun encodeChunked(output: ByteWriteChannel, input: ByteReadChannel) {
     try {
         while (!input.isClosedForRead) {
-            input.read { source, startIndex, endIndex ->
-                if (endIndex == startIndex) return@read 0
-                output.writeChunk(source, startIndex.toInt(), endIndex.toInt())
-            }
+//            input.read { source, startIndex, endIndex ->
+//                if (endIndex == startIndex) return@read 0
+//                output.writeChunk(source, startIndex.toInt(), endIndex.toInt())
+//            }
         }
 
         input.rethrowCloseCause()

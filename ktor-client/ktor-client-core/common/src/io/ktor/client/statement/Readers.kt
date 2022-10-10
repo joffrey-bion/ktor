@@ -13,7 +13,7 @@ import io.ktor.utils.io.core.*
  */
 @OptIn(InternalAPI::class)
 public suspend fun HttpResponse.readBytes(count: Int): ByteArray = ByteArray(count).also {
-    content.readFully(it)
+//    content.readFully(it)
 }
 
 /**

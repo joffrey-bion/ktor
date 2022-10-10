@@ -35,7 +35,7 @@ public interface ByteChannel : ByteReadChannel, ByteWriteChannel {
 /**
  * Creates buffered channel for asynchronous reading and writing of sequences of bytes.
  */
-public expect fun ByteChannel(autoFlush: Boolean = false): ByteChannel
+public fun ByteChannel(autoFlush: Boolean = false): ByteChannel = TODO()
 
 /**
  * Creates channel for reading from the specified byte array. Please note that it could use [content] directly
@@ -55,7 +55,7 @@ public fun ByteReadChannel(content: ByteArray, offset: Int): ByteReadChannel =
  * Creates channel for reading from the specified byte array. Please note that it could use [content] directly
  * or copy its bytes depending on the platform
  */
-public expect fun ByteReadChannel(content: ByteArray, offset: Int, length: Int): ByteReadChannel
+public fun ByteReadChannel(content: ByteArray, offset: Int, length: Int): ByteReadChannel = TODO()
 
 public fun ByteReadChannel(text: String, charset: Charset = Charsets.UTF_8): ByteReadChannel =
     ByteReadChannel(text.toByteArray(charset)) // TODO optimize to encode parts on demand

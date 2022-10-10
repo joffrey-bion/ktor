@@ -7,7 +7,6 @@ package io.ktor.network.tls
 import io.ktor.network.tls.extensions.*
 import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
-import java.io.*
 import java.math.*
 import java.security.cert.*
 import java.security.spec.*
@@ -22,7 +21,7 @@ internal suspend fun ByteReadChannel.readTLSRecord(): TLSRecord {
     val length = readShortCompatible() and 0xffff
     if (length > MAX_TLS_FRAME_SIZE) throw TLSException("Illegal TLS frame size: $length")
 
-    val packet = readPacket(length)
+    val packet = readPacket(length.toLong())
     return TLSRecord(type, version, packet)
 }
 
