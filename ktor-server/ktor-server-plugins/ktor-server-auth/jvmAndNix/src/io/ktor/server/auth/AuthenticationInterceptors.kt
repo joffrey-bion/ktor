@@ -86,7 +86,7 @@ public val AuthenticationInterceptors: RouteScopedPlugin<RouteAuthenticationConf
             provider.onAuthenticate(authenticationContext)
 
             if (authenticationContext.principal != null) {
-                LOGGER.debug("Authentication succeeded for ${call.request.uri} with provider $provider")
+                LOGGER.trace("Authentication succeeded for ${call.request.uri} with provider $provider")
                 break
             }
         }
@@ -112,7 +112,7 @@ public val AuthenticationInterceptors: RouteScopedPlugin<RouteAuthenticationConf
             challenge(context.challenge, call)
             if (context.challenge.completed) {
                 if (!call.isHandled) {
-                    LOGGER.debug("Responding unauthorized because call is not handled.")
+                    LOGGER.trace("Responding unauthorized because call is not handled.")
                     call.respond(UnauthorizedResponse())
                 }
                 return@on
@@ -123,7 +123,7 @@ public val AuthenticationInterceptors: RouteScopedPlugin<RouteAuthenticationConf
             challenge(context.challenge, call)
             if (context.challenge.completed) {
                 if (!call.isHandled) {
-                    LOGGER.debug("Responding unauthorized because call is not handled.")
+                    LOGGER.trace("Responding unauthorized because call is not handled.")
                     call.respond(UnauthorizedResponse())
                 }
                 return@on
@@ -132,7 +132,7 @@ public val AuthenticationInterceptors: RouteScopedPlugin<RouteAuthenticationConf
 
         for (error in context.allErrors) {
             if (!context.challenge.completed) {
-                LOGGER.debug("Responding unauthorized because of error ${error.message}")
+                LOGGER.trace("Responding unauthorized because of error ${error.message}")
                 if (!call.isHandled) {
                     call.respond(UnauthorizedResponse())
                 }
