@@ -47,6 +47,14 @@ public class CertificateBuilder internal constructor() {
     public var keySizeInBits: Int = 1024
 
     /**
+     * The usage for the generated key.
+     *
+     * This determines the extensions that should be written in the certificate, such as [OID.ExtKeyUsage] (server or
+     * client authentication), or [OID.BasicConstraints] to use the key as CA.
+     */
+    public var keyType: KeyType = KeyType.Server
+
+    /**
      * Domains for which this certificate is valid.
      */
     public var domains: List<String> = listOf("localhost")
@@ -71,6 +79,7 @@ public class CertificateBuilder internal constructor() {
             signerKeyPair = keys,
             algorithm = algorithm.name,
             validityDuration = daysValid.days,
+            keyType = keyType,
             domains = domains,
             ipAddresses = ipAddresses,
         )
