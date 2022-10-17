@@ -7,13 +7,23 @@ package io.ktor.network.tls.certificates
 import io.ktor.network.tls.extensions.*
 import java.io.*
 import java.time.temporal.*
-import javax.security.auth.x500.*
 import kotlin.test.*
 
 class CertificatesTest {
 
-    private val jbLocalhost = X500Principal("CN=localhost, OU=Kotlin, O=JetBrains, C=RU")
-    private val jbLocalhostCA = X500Principal("CN=localhostCA, OU=Kotlin, O=JetBrains, C=RU")
+    private val jbLocalhost = buildX500Principal {
+        commonName = "localhost"
+        organizationalUnitName = "Kotlin"
+        organizationName = "JetBrains"
+        countryName = "RU"
+    }
+
+    private val jbLocalhostCA = buildX500Principal {
+        commonName = "localhostCA"
+        organizationalUnitName = "Kotlin"
+        organizationName = "JetBrains"
+        countryName = "RU"
+    }
 
     @BeforeTest
     fun fixCurrentTime() {

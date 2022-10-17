@@ -45,7 +45,12 @@ public class CertificateBuilder internal constructor() {
     /**
      * The subject of the certificate, owner of the generated public key that we certify.
      */
-    public var subject: X500Principal = X500Principal("CN=localhost, OU=Kotlin, O=JetBrains, C=RU")
+    public var subject: X500Principal = buildX500Principal {
+        commonName = "localhost"
+        organizationalUnitName = "Kotlin"
+        organizationName = "JetBrains"
+        countryName = "RU"
+    }
 
     /**
      * Number of days the certificate is valid
