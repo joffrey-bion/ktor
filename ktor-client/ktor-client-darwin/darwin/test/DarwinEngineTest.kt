@@ -250,6 +250,19 @@ class DarwinEngineTest {
         }
     }
 
+    @Test
+    fun testWebSocketHandshakeProtocolHeader() = testSuspend {
+        val client = HttpClient(Darwin) {
+            install(WebSockets)
+        }
+
+        val session = client.webSocketSession("$TEST_WEBSOCKET_SERVER/websockets/protocol) {
+            header(HttpHeaders.SecWebSocketProtocol, "ship")
+        }
+
+        assertEquals("custom-protocol", session.call.response.headers[HttpHeaders.SecWebSocketProtocol])
+    }
+
     private fun stringToNSUrlString(value: String): String {
         return Url(value).toNSUrl().absoluteString!!
     }

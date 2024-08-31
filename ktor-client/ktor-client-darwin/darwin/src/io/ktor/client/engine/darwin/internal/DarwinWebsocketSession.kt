@@ -153,11 +153,11 @@ internal class DarwinWebsocketSession(
         coroutineContext.cancel()
     }
 
-    fun didOpen() {
+    fun didOpen(negotiatedProtocol: String?) {
         val response = HttpResponseData(
             HttpStatusCode.SwitchingProtocols,
             requestTime,
-            Headers.Empty,
+            Headers(SecWebSocketProtocol, negotiatedProtocol),
             HttpProtocolVersion.HTTP_1_1,
             this,
             coroutineContext

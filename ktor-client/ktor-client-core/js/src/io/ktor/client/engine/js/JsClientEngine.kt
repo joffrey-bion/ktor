@@ -111,10 +111,11 @@ internal class JsClientEngine(
             throw cause
         }
 
+        val negotiatedProtocol = socket.protocol.ifEmpty { null }
         return HttpResponseData(
             HttpStatusCode.SwitchingProtocols,
             requestTime,
-            Headers.Empty,
+            Headers(SecWebSocketProtocol, negotiatedProtocol),
             HttpProtocolVersion.HTTP_1_1,
             session,
             callContext

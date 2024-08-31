@@ -77,7 +77,7 @@ public class KtorNSURLSessionDelegate(
         didOpenWithProtocol: String?
     ) {
         val wsSession = webSocketSessions[webSocketTask] ?: return
-        wsSession.didOpen()
+        wsSession.didOpen(negotiatedProtocol = didOpenWithProtocol)
     }
 
     override fun URLSession(

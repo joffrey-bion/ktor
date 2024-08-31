@@ -101,6 +101,19 @@ internal fun Application.tlsTests() {
                     }
                 }
             }
+            webSocket("protocol", "custom-protocol") {
+                for (frame in incoming) {
+                    when (frame) {
+                        is Frame.Text -> {
+                            val text = frame.readText()
+                            send(Frame.Text(text))
+                        }
+
+                        is Frame.Binary -> send(Frame.Binary(fin = true, frame.data))
+                        else -> error("Unsupported frame type: ${frame.frameType}.")
+                    }
+                }
+            }
         }
     }
 }

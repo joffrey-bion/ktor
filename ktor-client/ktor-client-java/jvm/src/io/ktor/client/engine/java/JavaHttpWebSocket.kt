@@ -155,10 +155,11 @@ internal class JavaHttpWebSocket(
 
         webSocket = builder.buildAsync(requestData.url.toURI(), this).await()
 
+        val negotiatedProtocol = webSocket.protocol?.ifEmpty { null }
         return HttpResponseData(
             HttpStatusCode.SwitchingProtocols,
             requestTime,
-            Headers.Empty,
+            Headers(SecWebSocketProtocol, negotiatedProtocol),
             HttpProtocolVersion.HTTP_1_1,
             this,
             callContext
